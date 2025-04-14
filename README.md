@@ -8,6 +8,9 @@
 
 Kivy template for Real-time physiology signal detection.
 
+## Wikis
+Selalu refer pada [Wikis](https://github.com/archiseino/KivyApp-Template/wiki/%5BHome%5D-Dokumentasi-Template) untuk teknis lebih lanjut
+
 ## 🛠️ Installation
 
 Dengan asumsi bahwa Anda sudah mempunyai environment manager seperti conda. maka buat environment baru seperti ini. Clone / fork lalu jalankan perintah ini.
