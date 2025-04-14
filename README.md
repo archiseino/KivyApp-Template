@@ -18,13 +18,13 @@ Dengan asumsi bahwa Anda sudah mempunyai environment manager seperti conda. maka
 ### 📦 Requirements
 
 ```yaml
-conda create -n  python=3.10.16
+conda create -n kivy_env python=3.10.16
 ```
 
 Lalu buka environment yang sudah dibuat sebelumnya dengan
 
 ```yaml
-conda activate real_time_hr_respiration
+conda activate kivy_env
 ```
 
 Jalankan perintah ini untuk menginstall library yang dibutuhkan.
