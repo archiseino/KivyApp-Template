@@ -1,0 +1,141 @@
+#:kivy 1.11.1
+#:import dp kivy.metrics.dp
+
+<DataRow>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(40)
+    spacing: dp(5)
+    
+    Label:
+        text: root.datetime
+        size_hint_x: None
+        width: dp(150)
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+    
+    Label:
+        text: root.heart_rate
+        size_hint_x: None
+        width: dp(100)
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+    
+    Label:
+        text: root.blood_pressure
+        size_hint_x: None
+        width: dp(120)
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+    
+    Label:
+        text: root.skin_conductance
+        size_hint_x: None
+        width: dp(100)
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+    
+    Label:
+        text: root.stress_level
+        size_hint_x: None
+        width: dp(100)
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+    
+    Button:
+        text: "View"
+        size_hint_x: None
+        width: dp(80)
+
+<StressMonitorLayout>:
+    orientation: 'vertical'
+    spacing: dp(10)
+    padding: dp(10)
+    
+    # Header and controls remain the same as before...
+    
+    # Header row for the table
+    BoxLayout:
+        size_hint_y: None
+        height: dp(40)
+        spacing: dp(5)
+        
+        Label:
+            text: "Date & Time"
+            bold: True
+            size_hint_x: None
+            width: dp(150)
+        
+        Label:
+            text: "Heart Rate"
+            bold: True
+            size_hint_x: None
+            width: dp(100)
+        
+        Label:
+            text: "Blood Pressure"
+            bold: True
+            size_hint_x: None
+            width: dp(120)
+        
+        Label:
+            text: "Skin Conductance"
+            bold: True
+            size_hint_x: None
+            width: dp(100)
+        
+        Label:
+            text: "Stress Level"
+            bold: True
+            size_hint_x: None
+            width: dp(100)
+        
+        Label:
+            text: "Actions"
+            bold: True
+            size_hint_x: None
+            width: dp(80)
+    
+    DataView:
+        id: data_view
+        viewclass: 'DataRow'
+        scroll_type: ['bars', 'content']
+        scroll_wheel_distance: dp(100)
+        bar_width: dp(10)
+        RecycleBoxLayout:
+            default_size: None, dp(40)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
+            spacing: dp(5)
+    
+    BoxLayout:
+        size_hint_y: None
+        height: dp(40)
+        spacing: dp(10)
+        
+        Label:
+            id: counter_label
+            text: "Showing {} entries".format(len(data_view.data))
+            
+        Button:
+            text: "Add Data"
+            size_hint_x: None
+            width: dp(100)
+            on_press: root.add_dummy_data()
+            
+        Button:
+            text: "Previous"
+            size_hint_x: None
+            width: dp(100)
+            
+        Button:
+            text: "Next"
+            size_hint_x: None
+            width: dp(100)
