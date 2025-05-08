@@ -63,7 +63,17 @@
                 halign: 'left'
                 valign: 'middle'
                 text_size: self.size
-                size_hint_x: 0.7
+                size_hint_x: 0.5
+            
+            Label:
+                id: counter_label
+                text: "Showing 0 of 150 entries"
+                size_hint_x: 0.3
+                color: 0.4, 0.4, 0.4, 1
+                font_size: '14sp'
+                halign: 'right'
+                valign: 'middle'
+                text_size: self.size
             
             RoundedFlatButton:
                 text: "Export Data"
@@ -73,17 +83,7 @@
                 pos_hint: {'center_y': 0.5}
                 color: 0.3, 0.3, 0.3, 1
                 font_size: '14sp'
-            
-            DarkFlatButton:
-                text: "New Entry"
-                size_hint_x: None
-                width: dp(120)
-                height: dp(36)
-                pos_hint: {'center_y': 0.5}
-                color: 1, 1, 1, 1
-                font_size: '14sp'
-                on_press: root.add_dummy_data()
-                
+                            
         # Table header
         BoxLayout:
             size_hint_y: None

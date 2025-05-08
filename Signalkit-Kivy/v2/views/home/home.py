@@ -95,9 +95,9 @@ class Home(Screen):
             # Refresh the figure
             self.figure_wgt.figure.canvas.draw_idle()
 
-    def on_leave(self):
-        # Release the camera and unschedule the Clock event when leaving the screen
-        if hasattr(self, 'capture') and self.capture:
-            self.capture.release()
-            self.capture = None
-        Clock.unschedule(self.update_graph)  # Stop the update method from being called
+    # def on_leave(self):
+    #     # Release the camera and unschedule the Clock event when leaving the screen
+    #     if hasattr(self, 'capture') and self.capture:
+    #         self.capture.release()
+    #         self.capture = None
+    #     Clock.unschedule(self.update_graph)  # Stop the update method from being called

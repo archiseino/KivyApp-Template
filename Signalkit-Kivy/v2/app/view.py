@@ -20,7 +20,6 @@ But I'll leave as a Trivia for you
 class StressMonitorLayout(BoxLayout):
     def __init__(self, **kw):
         super().__init__(**kw)
-        logger.debug("StressMonitorLayout initialized")
 
 class NavTab(ToggleButtonBehavior, BoxLayout):
     """ A tab for the navigation bar. """

@@ -10,6 +10,7 @@ from kivy.uix.image import Image
 from kivy.app import App
 from kivy.graphics.texture import Texture
 from kivy.lang import Builder
+import datetime
 
 from utils.POS import POS
 from utils.filtering import preprocess_ppg
@@ -53,6 +54,7 @@ class CameraLayout(Image):
         self.capture = cv2.VideoCapture(0)  
         Clock.schedule_interval(self.update, 1.0 / 30) # Update the Camera feed at 30 FPS
         Clock.schedule_interval(self.emit_rppg_signal, 1.0/ 10) # Emit the signal at 10 Hz
+        Clock.schedule_interval(self.send_data_log, 20) # Update the Log every 1 minute
 
         ## Pose Landmarker Props
         self.features = None  # Initialize features attribute
@@ -124,12 +126,12 @@ class CameraLayout(Image):
             
             # Check if home widget exists in the screen
             if not hasattr(home_screen, 'ids') or not home_screen.ids or 'home' not in home_screen.ids:
-                print("Home widget not found in home screen")
-                if hasattr(home_screen, 'ids'):
-                    print(f"Available ids in home screen: {list(home_screen.ids.keys())}")
+                # print("Home widget not found in home screen")
+                # if hasattr(home_screen, 'ids'):
+                    # print(f"Available ids in home screen: {list(home_screen.ids.keys())}")
                 # Try to find the first child of the screen which might be the home widget
                 if hasattr(home_screen, 'children') and home_screen.children:
-                    print("Returning first child of home screen as fallback")
+                    # print("Returning first child of home screen as fallback")
                     return home_screen.children[0]
                 return None
                 
@@ -137,6 +139,49 @@ class CameraLayout(Image):
             
         except Exception as e:
             print(f"Error in get_home_widget: {e}")
+            return None
+
+    def send_data_log(self, dt):
+        ## Getting the Log Widget
+        app = App.get_running_app()
+        if not app:
+            print("No running app found")
+            return None
+        
+        # Get the screen manager
+        try:
+            # Make sure we use the correct ID for the screen manager
+            # screen_manager = app.root.ids.scrn_manager
+            # Access the log widget directly from the root
+            if 'log' in app.root.ids:
+                log_widget = app.root.ids.log
+                print(f"Found log widget directly in root.ids: {type(log_widget).__name__}")
+                
+                # If log widget has the data_view
+                if hasattr(log_widget, 'ids') and 'data_view' in log_widget.ids:
+                    data_view = log_widget.ids.data_view
+                    data_view.add_data_point()
+                    print("Data point added successfully to log via direct access")
+                    return True
+                
+                # If log widget has the method we need
+                elif hasattr(log_widget, 'add_data_point_to_log'):
+                    log_widget.add_data_point_to_log()
+                    print("Data point added successfully to log via method")
+                    return True
+                    
+                else:
+                    print(f"Log widget found but missing required attributes")
+                    if hasattr(log_widget, 'ids'):
+                        print(f"Available ids in log widget: {list(log_widget.ids.keys())}")
+            else:
+                print("Log widget not found in root.ids")
+            
+        except Exception as e:
+            print(f"Error in send_data_log: {str(e)}")
+            # Print more details to help debug
+            if app and hasattr(app.root, 'ids'):
+                print(f"Available root ids: {list(app.root.ids.keys())}")
             return None
 
     def update_heart_rate(self, dt):
