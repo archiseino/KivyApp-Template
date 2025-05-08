@@ -18,8 +18,6 @@
 #:import Home views.home.Home
 #:import Log views.log.Log
 
-# D:\Stuff That I Need to Do\Template-Phys\Signalkit-Kivy\v2\views\log\__init__.py
-
 # Don't touch this, proceed with cautions
 # This layout UI is based on the assets/images/UI.jpg
 
@@ -32,7 +30,7 @@
     spacing: dp(16)
     canvas.before:
         Color:
-            rgba: app.colors.grey_light
+            rgba: rgba('#ffffff')
         Rectangle:
             pos: self.pos
             size: self.size
@@ -41,6 +39,15 @@
         id: nav_menu
         size_hint_x: .2
         orientation: 'vertical'
+        BoxLayout:
+            id: logo_nbox
+            size_hint_y: .15
+            padding: dp(8)
+            Text:
+                text: 'Signalkit'
+                font_name: app.fonts.heading
+                font_size: app.fonts.size.h3
+       
         GridLayout:
             id: tabs_box
             cols: 1
@@ -55,14 +62,14 @@
             NavTab:
                 text: "Home"
                 state: "down"
-                icon: "assets/icons/ic_grid.png"
-                icon_active: "assets/icons/ic_grid_active.png"
-                screen_name: "scrn_home"
+                icon: 'assets/icons/ic_grid.png'
+                icon_active: 'assets/icons/ic_grid_active.png'
+                screen_name: 'scrn_home'
             NavTab:
                 text: 'Log'
                 icon: 'assets/icons/ic_trend.png'
                 icon_active: 'assets/icons/ic_trend_active.png'
-                screen_name: "scrn_log"
+                screen_name: 'scrn_log'
 
     BoxLayout:
         size_hint_x: .85 
@@ -78,7 +85,7 @@
         
         BoxLayout:
             ScreenManager:
-                id: scrn_manager:
+                id: scrn_manager
                 Screen:
                     name: "scrn_home"
                     Home:
@@ -124,6 +131,3 @@
         valign: 'middle'
         text: root.text
         color: rgba('c4c4c4') if root.state == 'normal' else app.colors.primary
-    Button:
-        background_color: [1, 0, 1, 0]
-        on_touch_down: root.switch_screen(root.screen_name)

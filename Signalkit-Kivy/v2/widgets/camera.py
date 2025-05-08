@@ -86,31 +86,111 @@ class CameraLayout(Image):
 
       Widget sendiri terdapat pada file widgets/phys-box.
 
-    """
+    """ 
+    def get_home_widget(self):
+        """Helper method to get the Home widget"""
+        app = App.get_running_app()
+        if not app:
+            print("No running app found")
+            return None
+            
+        try:
+            # Check if root exists
+            if not hasattr(app, 'root') or not app.root:
+                print("App root not found")
+                return None
+                
+            # Check if scrn_manager exists in ids
+            if not hasattr(app.root, 'ids'):
+                print("Root has no ids attribute")
+                return None
+                
+            if 'scrn_manager' not in app.root.ids:
+                print("scrn_manager not found in root.ids")
+                print(f"Available ids: {list(app.root.ids.keys())}")
+                return None
+                
+            # Get the screen manager
+            scrn_manager = app.root.ids.scrn_manager
+            
+            # Check if scrn_home exists
+            if not scrn_manager.has_screen('scrn_home'):
+                print("Screen 'scrn_home' not found")
+                print(f"Available screens: {scrn_manager.screen_names}")
+                return None
+                
+            # Get the home screen
+            home_screen = scrn_manager.get_screen('scrn_home')
+            
+            # Check if home widget exists in the screen
+            if not hasattr(home_screen, 'ids') or not home_screen.ids or 'home' not in home_screen.ids:
+                print("Home widget not found in home screen")
+                if hasattr(home_screen, 'ids'):
+                    print(f"Available ids in home screen: {list(home_screen.ids.keys())}")
+                # Try to find the first child of the screen which might be the home widget
+                if hasattr(home_screen, 'children') and home_screen.children:
+                    print("Returning first child of home screen as fallback")
+                    return home_screen.children[0]
+                return None
+                
+            return home_screen.ids.home
+            
+        except Exception as e:
+            print(f"Error in get_home_widget: {e}")
+            return None
+
     def update_heart_rate(self, dt):
         if len(self.rppg_buffer) > 0:
-            app = App.get_running_app()
-            app.root.ids.hr_box.update_value(np.array(self.emitting_rppg_buffer))
+            home = self.get_home_widget()
+            if home and hasattr(home, 'ids') and hasattr(home.ids, 'hr_box'):
+                home.ids.hr_box.update_value(np.array(self.emitting_rppg_buffer))
+            else:
+                print("Cannot update heart rate: home widget or hr_box not found")
 
     def update_hrv(self, dt):
         if len(self.rppg_buffer) > 0:
-            app = App.get_running_app()
-            app.root.ids.hrv_box.update_value(np.array(self.rppg_buffer))
+            home = self.get_home_widget()
+            if home and hasattr(home, 'ids') and hasattr(home.ids, 'hrv_box'):
+                home.ids.hrv_box.update_value(np.array(self.rppg_buffer))
+            else:
+                print("Cannot update HRV: home widget or hrv_box not found")
 
     def update_resp(self, dt):
         if len(self.rppg_buffer) > 0:
-            app = App.get_running_app()
-            app.root.ids.resp_box.update_value(np.array(self.resp_buffer))
+            home = self.get_home_widget()
+            if home and hasattr(home, 'ids') and hasattr(home.ids, 'resp_box'):
+                home.ids.resp_box.update_value(np.array(self.resp_buffer))
+            else:
+                print("Cannot update respiration: home widget or resp_box not found")
 
     def update_spo2(self, dt):
         if len(self.rppg_buffer) > 0:
-            app = App.get_running_app()
-            app.root.ids.spo2_box.update_value(np.array(self.r_buffer), np.array(self.g_buffer), np.array(self.b_buffer))
+            home = self.get_home_widget()
+            if home and hasattr(home, 'ids') and hasattr(home.ids, 'spo2_box'):
+                home.ids.spo2_box.update_value(np.array(self.r_buffer), np.array(self.g_buffer), np.array(self.b_buffer))
+            else:
+                print("Cannot update SpO2: home widget or spo2_box not found")
 
     def update_bar(self, dt):
         if len(self.rppg_buffer) > 0:
-            app = App.get_running_app()
-            app.root.ids.stress_bar.update_value(np.array(self.rppg_buffer))
+            home = self.get_home_widget()
+            if home and hasattr(home, 'ids') and hasattr(home.ids, 'stress_bar'):
+                home.ids.stress_bar.update_value(np.array(self.rppg_buffer))
+            else:
+                print("Cannot update stress bar: home widget or stress_bar not found")
+
+    def emit_rppg_signal(self, dt):
+        """ Emitting the rPPG signal for Preview """
+        if self.emitting_rppg_buffer:
+            home = self.get_home_widget()
+            if home and hasattr(home, 'update_stress_signal'):
+                self.signal_value = self.emitting_rppg_buffer.pop(0) 
+                home.update_stress_signal(self.signal_value)
+            else:
+                # Just pop the value to avoid buffer overflow even if we can't update the UI
+                if self.emitting_rppg_buffer:
+                    self.signal_value = self.emitting_rppg_buffer.pop(0)
+                print("Cannot emit rPPG signal: home widget not found or missing update_stress_signal method")
 
     def update(self, dt):
 
@@ -274,13 +354,6 @@ class CameraLayout(Image):
         )
         detector = vision.FaceDetector.create_from_options(options)
         return detector
-
-    def emit_rppg_signal(self, dt):
-        """ Emitting the rPPG signal for Preview """
-        if self.emitting_rppg_buffer:
-            app = App.get_running_app()
-            self.signal_value = self.emitting_rppg_buffer.pop(0) 
-            app.root.update_stress_signal(self.signal_value)
 
     def initialize_features(self, frame):
         """

@@ -17,7 +17,7 @@ import random
 from widgets.buttons import FlatButton, IconButton
 
 # Load KV file with correct path and case
-Builder.load_file('views/log/log.kv')
+Builder.load_file("views/log/log.kv")
 
 class DataRow(RecycleDataViewBehavior, BoxLayout):
     datetime = StringProperty("")
@@ -76,9 +76,12 @@ class Log(Screen):
         super(Log, self).__init__(**kwargs)
         self.total_entries = 150  # Simulate having 150 total entries
     
+    def get_log_widget(self):
+        """Get the data_view widget directly from the current screen"""
+        return self.ids.data_view
+
     def add_dummy_data(self):
         """Callback for the Add Data button"""
-        self.ids.data_view.add_data_point()
-        # Update counter with formatted text matching the design
-        self.ids.counter_label.text = f"Showing {len(self.ids.data_view.data)} of {self.total_entries} entries"
-
+        data_view = self.get_log_widget()
+        if data_view:
+            data_view.add_data_point()
