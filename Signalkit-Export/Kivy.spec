@@ -8,8 +8,9 @@ from setuptools._vendor import jaraco
 
 block_cipher = None
 
+# Change the Path correspondently for the
 a = Analysis(
-    [os.path.join(os.getcwd(), '..\\Kivy-App\\main.py')],
+    [os.path.join(os.getcwd(), '..\\Signalkit-Kivy\\v1\\main.py')],
     pathex=[],
     binaries=[
         (os.path.join(p, "SDL2.dll"), ".") for p in sdl2.dep_bins
@@ -61,7 +62,7 @@ a = Analysis(
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
-    pyz, Tree(os.path.join(os.getcwd(), '..\\Kivy-App')),
+    pyz, Tree(os.path.join(os.getcwd(), '..\\Signalkit-Kivy\\v1')),
     a.scripts,
     a.binaries,
     a.zipfiles,
