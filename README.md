@@ -8,7 +8,13 @@
 
 Kivy template for Real-time physiology signal detection.
 
+## Folder Structure
+
+- v1 is the standard app
+- v2 comes with the log feature
+
 ## Wikis
+
 Selalu refer pada [Wikis](https://github.com/archiseino/KivyApp-Template/wiki/%5BHome%5D-Dokumentasi-Template) untuk teknis lebih lanjut
 
 ## 🛠️ Installation
