@@ -1,0 +1,33 @@
+<RoundedButton>:
+    text_size: self.size
+    halign: "center"
+    valign: "middle"
+    color: self.color_text
+    canvas.before:
+        Color:
+            rgba: self.color_normal if self.state == 'normal' else self.color_down
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [self.border_radius]
+        Color:
+            rgba: self.border_color
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, self.border_radius)
+            width: 1
+
+<DarkRoundedButton>:
+    # DarkRoundedButton inherits styling from RoundedButton with custom colors
+
+<CircleButton>:
+    text_size: self.size
+    halign: "center"
+    valign: "middle"
+    color: self.color_text
+    canvas.before:
+        Color:
+            rgba: self.color_normal if self.state == 'normal' else self.color_down
+        RoundedRectangle:
+            pos: self.pos[0] + dp(12), self.pos[1] + dp(15)
+            size: dp(16), dp(16) 
+            radius: [self.border_radius]
